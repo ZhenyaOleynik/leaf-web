@@ -1,4 +1,4 @@
-body, body * {
+html, body, body * {
     box-sizing: border-box; 
     font-family: 'Open Sans', sans-serif; 
     margin: 0;
@@ -35,12 +35,11 @@ body, body * {
     height: 100px;
     padding-top: 40px;
     opacity: 1;
-    margin-bottom: 3em;
 }
 
 button {
     font-size: 1.5em;
-    margin-right: 1em;
+    margin-right: 1em !important;
     border: 0;
     cursor: pointer;
 
@@ -81,7 +80,8 @@ button:active {
 .form-group label {
     text-transform: uppercase;
 }
-input[type='submit'] {
+
+.submit {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 1em;
