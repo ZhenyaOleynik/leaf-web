@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import '../../../css/login-register-form.css'
+import '../../../../App.css'
 import { useSpring, animated } from 'react-spring'
 import RegisterForm from './RegisterForm'
 import LoginForm from './LoginForm'
@@ -46,14 +47,14 @@ const LoginRegisterForm = () => {
                 </animated.button>
             </div>
             <div className="form-group">
-                <animated.form action='' id='login-form' style={loginProps}>
+                <animated.form action='#' id='login-form' style={loginProps}>
                     <LoginForm />
                 </animated.form>
                 <animated.form action='' id='register-form' style={regProps}>
                     <RegisterForm />
                 </animated.form>
                 <animated.div className='forgot-panel' style={loginProps}>
-                    <a href='#'>Forgot your password ?</a>
+                    <a href='#' onClick={regBtnClicked}>Forgot your password ?</a>
                 </animated.div>
             </div>
         </div>
