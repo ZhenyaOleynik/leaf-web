@@ -8,19 +8,31 @@ router.post('/register', (req, res) => {
 
         const { first_name, last_name, login, password } = req.body
 
-        const query = "INSERT INTO `users` (`id`, `login`, `first_name`, `last_name`, `password`, `photo`, `role_id`) VALUES (NULL, ?, ?, ?, ?, ?, ?)"
+        const query_insert_in_users = "INSERT INTO `users` (`id`, `login`, `first_name`, `last_name`, `password`, `photo`, `role_id`) VALUES (NULL, ?, ?, ?, ?, ?, ?)"
+        const query_insert_in_roles = "INSERT INTO `roles` (`id`, `title`) VALUES (?, ?)"
 
-        db.query(query,
+        db.query(query_insert_in_users,
             [login, first_name, last_name, password, 'photo', 1],
             (err, result) => {
-                if (err)
+                if (err) {
                     console.log(err)
-                else
-                    console.log('registred')
+                }
+                else {
+                    console.log(result)
+                    db.query(query_insert_in_roles,
+                        [result.insertId, login === 'admin' ? 'admin' : 'user'],
+                        (err) => {
+                            if (err)
+                                console.log(err)
+                            else
+                                res.status(200).json({ msg: 'registred' })
+                        }
+                    )
+                }
             })
 
     } catch (error) {
-        return res.status(500).json({ error: err })
+        return res.status(500).json({ error })
     }
 })
 
