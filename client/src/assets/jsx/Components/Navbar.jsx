@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../../css/navbar.css'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Menu } from 'antd'
 import 'antd/dist/antd.css'
 import Axios from 'axios'
@@ -8,18 +8,22 @@ import { useEffect } from 'react';
 
 Axios.defaults.withCredentials = true
 
-const NavBar = () => {
+const NavBar = ({ page }) => {
 
     const [isAuth, setIsAuth] = useState(false)
     const [current, setCurrent] = useState('profile')
+    const [mounted, setMounted] = useState(false)
 
-    useEffect(() => {
+    if (!mounted) {
         Axios.get('http://localhost:5000/api/auth/isAuth')
             .then(res => setIsAuth(res.data.auth))
             .catch(err => false)
-    }, [])
+    }
 
-    useEffect(() => setCurrent(isAuth ? 'profile' : 'login/register'), [isAuth])
+    useEffect(() => {
+        setMounted(true)
+        setCurrent(page)
+    }, [])
 
     const handleClick = e => setCurrent(e.key)
 
@@ -30,18 +34,18 @@ const NavBar = () => {
                     isAuth ?
                         <>
                             <Menu.Item key='profile'>
-                                <a href="#">Your profile</a>
+                                <NavLink to='/profile'>Your Profile</NavLink>
                             </Menu.Item>
                         </>
                         :
                         <>
                             <Menu.Item key='login/register'>
-                                <a href="#">Login/Register</a>
+                                <NavLink to='/auth'>Login/Register</NavLink>
                             </Menu.Item>
                         </>
                 }
-                <Menu.Item key='all_users'>
-                    <a href="#">All Users</a>
+                <Menu.Item key='table'>
+                    <NavLink to='/table'>All Users</NavLink>
                 </Menu.Item>
             </Menu>
         </>
