@@ -36,10 +36,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     key: 'userId',
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    name: process.env.SESSION_NAME,
+    resave: true,
     saveUninitialized: false,
     cookie: {
-        expires: 60 * 60 * 24
+        expires: new Date(Date.now() + 3600000/*1 hour*/)
     }
 }))
 
