@@ -15,6 +15,8 @@ export const handleRegister = async e => {
         .then(res => console.log(res.data))
         .catch(err => console.log('post register error: ' + err))
 
+
+    window.location.reload()
 }
 
 export const handleLogin = async e => {
@@ -29,5 +31,5 @@ export const handleLogin = async e => {
         .then(res => console.log(res.data))
         .catch(err => console.log('post error: ' + err))
 
-    window.location.reload()
+    window.location.href = '../profile'
 }
