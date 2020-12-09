@@ -5,19 +5,27 @@ import Axios from "axios"
 import { createContext, useState } from "react"
 import { useEffect } from 'react'
 
-
-
-export const AllUsersTable = () => {
+const AllUsersTable = () => {
 
     const [datasource, setDatasource] = useState([])
+    const [mounted, setMounted] = useState(false)
+    const [userType, setUserType] = useState('user')
 
-    useEffect(() => {
+    if (!mounted) {
+        Axios.get('http://localhost:5000/api/users/getCurrentUser')
+            .then(res => setUserType(res.data[0].title))
+            .catch(err => console.log(err))
+
         Axios.get('http://localhost:5000/api/users/getAll')
             .then(res => {
                 console.log(res.data)
                 setDatasource(res.data)
             })
             .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        setMounted(true)
     }, [])
 
     const deleteUser = id => {
@@ -26,53 +34,33 @@ export const AllUsersTable = () => {
             { id })
             .then(res => console.log(res))
             .catch(err => console.log(err))
-        window.location.reload(true)
+        window.location.reload()
     }
 
-    const cols = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id'
-        },
-        {
-            title: 'First Name',
-            dataIndex: 'first_name',
-            key: 'first_name'
-        },
-        {
-            title: 'Last Name',
-            dataIndex: 'last_name',
-            key: 'first_name'
-        },
-        {
-            title: 'Login',
-            dataIndex: 'login',
-            key: 'login'
-        },
-
-    ]
     return (
         <Table dataSource={datasource}>
             <Column title='ID' dataIndex='id' key='id' />
             <Column title='First name' dataIndex='first_name' key='first_name' />
             <Column title='Last name' dataIndex='last_name' key='last_name' />
             <Column title='Login' dataIndex='login' key='login' />
-            <Column
-                title=''
-                key='delete'
-                render={(record) => (
-                    <span>
-                        {
-                            <Button onClick={(e) => deleteUser(record.id)}>
-                                <DeleteOutlined />
-                            </Button>
-                        }
-                    </span>
-                )}
-            />
-
+            {userType === 'admin' ?
+                <Column
+                    title=''
+                    key='delete'
+                    render={(record) => (
+                        <span>
+                            {
+                                <Button onClick={(e) => deleteUser(record.id)}>
+                                    <DeleteOutlined />
+                                </Button>
+                            }
+                        </span>
+                    )}
+                />
+                : <></>}
         </Table>
     )
 
 }
+
+export default AllUsersTable
