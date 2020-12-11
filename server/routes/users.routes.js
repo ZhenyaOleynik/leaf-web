@@ -4,7 +4,7 @@ const router = Router()
 
 const db = require('../db')
 
-dotenv.config({ path: './.env' })
+dotenv.config({ path: '../.env' })
 
 router.get('/getAll', (req, res) => {
 
@@ -24,6 +24,8 @@ router.get('/getAll', (req, res) => {
 router.get('/getCurrentUser', (req, res) => {
 
     const id = req.session.userId
+
+    console.log(id)
 
     const query_select_data = 'SELECT * FROM `users` WHERE `id` = ?'
     const query_select_role = 'SELECT * FROM `roles` WHERE `id` = ?'
@@ -75,30 +77,30 @@ router.delete('/delete' + '/:id', (req, res) => {
     db.query('DELETE FROM `users` WHERE `id` = ?', [id], (err, result) => {
         if (err) {
             console.log('sql delete err: ' + err)
-            res.send(500).json({ err })
+            res.status(500).json({ err })
         }
         res.status(200)
     })
 })
 
-router.put('/update' + '/:id', (req, res) => {
+router.put('/updateCurrent', (req, res) => {
 
-    const id = req.params.id
+    const id = req.session.userId
     const data = req.body.data
-
-    data[data.length] = id
 
     console.log(1)
 
-    const query = 'UPDATE `users` SET `first_name`=? `last_name`=? `login`=? `password`=? `photo`=? WHERE `id`=?'
+    const update_query = 'UPDATE `users` SET `first_name` = ?, `last_name` = ?, `login` = ?, `password` = ?, photo = ? WHERE `id` = ?'
 
-    db.query(query, data, (err, result) => {
-        if (err) {
-            console.log('sql delete err: ' + err)
-            res.send(500).json({ msg: err })
-        }
-        res.status(200)
-    })
+    db.query(update_query,
+        [data.first_name, data.last_name, data.login, data.password, data.photo, id],
+        (err, result) => {
+            if (err) {
+                console.log('sql delete err: ' + err)
+                res.status(500).json({ msg: err })
+            }
+            else res.status(200)
+        })
 })
 
 module.exports = router
