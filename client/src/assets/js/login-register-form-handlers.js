@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { serverURL } from '../../config'
 
 Axios.defaults.withCredentials = true
 
@@ -9,7 +10,7 @@ export const handleRegister = async e => {
     const login = document.getElementById('username').value
     const password = document.getElementById('pass').value
 
-    await Axios.post('http://localhost:5000/api/auth/register', {
+    await Axios.post(serverURL + '/api/auth/register', {
         first_name, last_name, login, password
     })
         .then(res => console.log(res.data))
@@ -27,7 +28,7 @@ export const handleLogin = async e => {
     console.log(login)
     console.log(password)
 
-    await Axios.post('http://localhost:5000/api/auth/login', { login, password })
+    await Axios.post(serverURL + '/api/auth/login', { login, password })
         .then(res => console.log(res.data))
         .catch(err => console.log('post error: ' + err))
 

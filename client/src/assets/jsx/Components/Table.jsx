@@ -4,6 +4,7 @@ import Column from "antd/lib/table/Column"
 import Axios from "axios"
 import { createContext, useState } from "react"
 import { useEffect } from 'react'
+import { serverURL } from "../../../config"
 
 const AllUsersTable = () => {
 
@@ -12,11 +13,11 @@ const AllUsersTable = () => {
     const [userType, setUserType] = useState('user')
 
     if (!mounted) {
-        Axios.get('http://localhost:5000/api/users/getCurrentUser')
+        Axios.get(serverURL + '/api/users/getCurrentUser')
             .then(res => setUserType(res.data[0].title))
             .catch(err => console.log(err))
 
-        Axios.get('http://localhost:5000/api/users/getAll')
+        Axios.get(serverURL + '/api/users/getAll')
             .then(res => {
                 console.log(res.data)
                 setDatasource(res.data)
@@ -29,7 +30,7 @@ const AllUsersTable = () => {
     }, [])
 
     const deleteUser = id => {
-        Axios.delete(`http://localhost:5000/api/users/delete/${id}`,
+        Axios.delete(serverURL + `/api/users/delete/${id}`,
             { withCredentials: true },
             { id })
             .then(res => console.log(res))

@@ -5,6 +5,7 @@ import { Menu } from 'antd'
 import 'antd/dist/antd.css'
 import Axios from 'axios'
 import { useEffect } from 'react';
+import { serverURL } from '../../../config';
 
 Axios.defaults.withCredentials = true
 
@@ -15,7 +16,7 @@ const NavBar = ({ page }) => {
     const [mounted, setMounted] = useState(false)
 
     if (!mounted) {
-        Axios.get('http://localhost:5000/api/auth/isAuth')
+        Axios.get(serverURL + '/api/auth/isAuth')
             .then(res => setIsAuth(res.data.auth))
             .catch(err => false)
     }
