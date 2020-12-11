@@ -2,25 +2,16 @@ import Axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { serverURL } from '../../../config'
 import NavBar from '../Components/Navbar'
 import UserCard from '../Components/UserCard'
 
 const Profile = () => {
 
     const [userInfo, setUserInfo] = useState({})
-    // const [mounted, setMounted] = useState(false)
-
-    // console.log(1)
-
-    // if (!mounted) {
-
-    // }
-
-    // useEffect(() => setMounted(true), [])
 
     useEffect(() => {
-        console.log(2)
-        Axios.get('http://localhost:5000/api/users/getCurrentUser')
+        Axios.get(serverURL + '/api/users/getCurrentUser')
             .then(res => {
                 setUserInfo(res.data[0])
                 console.log(res.data)
