@@ -34,22 +34,20 @@ const EditForm = ({ oldData }) => {
     const [image, setImage] = useState('')
 
     const onFinish = values => {
-        Axios.put(serverURL + '/api/users/updateCurrent', { data: { ...Object.assign(oldData, values), photo: image || oldData.photo } })
+        Axios.put(serverURL + '/api/users/updateCurrent', {...values, photo: (image === '' ? oldData.image : image)})
             .then(res => window.location.href = '/profile')
     }
 
     const onSubmitImg = acceptedFiles => {
         let formData = new FormData()
 
-        let config = {
-            headers: { 'content-type': 'multipart/form/data' }
+        const config = {
+            headers: { 
+                'content-type': 'multipart/form/data' 
+            }
         }
 
         const file = acceptedFiles[0]
-
-        // if (!(file.mimetype === 'image/png' || file.mimetype === 'image/jpg'))
-        //     return message.error('Can only upload PNG/JPG file!')
-
 
         formData.append('file', file)
 
@@ -68,6 +66,12 @@ const EditForm = ({ oldData }) => {
             <Title level={4}>Fill only fields you want to change</Title>
             <Form
                 name='Edit'
+                initialValues = {{
+                    login: oldData.login,
+                    first_name: oldData.first_name,
+                    last_name: oldData.last_name,
+                    password: oldData.password
+                }}
                 onFinish={onFinish}
                 onFinishFailed={err => console.log('Failed: ' + err)}
             >
