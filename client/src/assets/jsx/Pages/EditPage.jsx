@@ -19,7 +19,7 @@ const EditPage = () => {
     return (
         <>
             <NavBar />
-            <EditForm oldData={user} />
+            <EditForm oldData={user} returnTo='/profile' />
         </>
     )
 }
