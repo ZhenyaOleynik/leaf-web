@@ -1,16 +1,22 @@
-import { Button, Table } from "antd"
-import { DeleteOutlined } from '@ant-design/icons'
+import { Button, Table, Typography } from "antd"
+import { Link } from 'react-router-dom'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import Column from "antd/lib/table/Column"
 import Axios from "axios"
 import { createContext, useState } from "react"
 import { useEffect } from 'react'
 import { serverURL } from "../../../config"
+import EditForm from "./EditForm"
+
+const { Title } = Typography
 
 const AllUsersTable = () => {
 
     const [datasource, setDatasource] = useState([])
     const [mounted, setMounted] = useState(false)
     const [userType, setUserType] = useState('user')
+    const [data, setData] = useState({})
+    const [isEditOpen, setIsEditOpen] = useState(false)
 
     if (!mounted) {
         Axios.get(serverURL + '/api/users/getCurrentUser')
@@ -38,28 +44,50 @@ const AllUsersTable = () => {
         window.location.reload()
     }
 
+    const openEdit = record => {
+        setData(record)
+        setIsEditOpen(true)
+    }
+
     return (
-        <Table dataSource={datasource}>
-            <Column title='ID' dataIndex='id' key='id' />
-            <Column title='First name' dataIndex='first_name' key='first_name' />
-            <Column title='Last name' dataIndex='last_name' key='last_name' />
-            <Column title='Login' dataIndex='login' key='login' />
-            {userType === 'admin' ?
-                <Column
-                    title=''
-                    key='delete'
-                    render={(record) => (
-                        <span>
+        <>
+            {
+                !isEditOpen ?
+                    <>
+                        <Link to='/add'><PlusOutlined key='add' /><Title level={3}>Add new user</Title></Link>
+                        <Table dataSource={datasource}>
+                            <Column title='ID' dataIndex='id' key='id' />
+                            <Column title='First name' dataIndex='first_name' key='first_name' />
+                            <Column title='Last name' dataIndex='last_name' key='last_name' />
+                            <Column title='Login' dataIndex='login' key='login' />
                             {
-                                <Button onClick={(e) => deleteUser(record.id)}>
-                                    <DeleteOutlined />
-                                </Button>
+                                userType === 'admin' ?
+                                    <>
+                                        <Column
+                                            title=''
+                                            key='delete'
+                                            render={(record) => (
+                                                <span>
+                                                    <Button onClick={(e) => deleteUser(record.id)}>
+                                                        <DeleteOutlined />
+                                                    </Button>
+                                                    <Button onClick={(e) => openEdit(record)}>
+                                                        <EditOutlined key='edit' />
+                                                    </Button>
+                                                </span>
+                                            )}
+                                        />
+                                    </>
+                                    : <> </>
                             }
-                        </span>
-                    )}
-                />
-                : <></>}
-        </Table>
+                        </Table>
+                    </>
+                    : <>
+                        <EditForm oldData={data} returnTo='/table' />
+                    </>
+
+            }
+        </>
     )
 
 }
