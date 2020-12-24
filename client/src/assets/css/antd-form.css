@@ -1,0 +1,9 @@
+.antd-container {
+    width: 500px;
+    height: 560px;
+    box-sizing: border-box;
+    padding: 20px;
+    justify-content: center;
+    justify-self: center;
+    margin-top: 1rem;
+}
