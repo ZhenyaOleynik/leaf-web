@@ -61,7 +61,6 @@ router.get('/logout', (req, res) => {
             res.status(500).json({ err })
         }
         else {
-            res.clearCookie(process.env.SESSION_NAME)
             res.status(200).json({ msg: 'logout...' })
         }
     })
@@ -86,9 +85,9 @@ router.delete('/delete' + '/:id', (req, res) => {
 router.put('/updateCurrent', (req, res) => {
 
     const id = req.session.userId
-    const data = req.body.data
+    const data = req.body
 
-    console.log(1)
+    console.log('1')
 
     const update_query = 'UPDATE `users` SET `first_name` = ?, `last_name` = ?, `login` = ?, `password` = ?, photo = ? WHERE `id` = ?'
 
@@ -96,11 +95,32 @@ router.put('/updateCurrent', (req, res) => {
         [data.first_name, data.last_name, data.login, data.password, data.photo, id],
         (err, result) => {
             if (err) {
-                console.log('sql delete err: ' + err)
+                console.log('sql update err: ' + err)
                 res.status(500).json({ msg: err })
             }
             else res.status(200)
         })
+})
+
+router.put('/update' + '/:id', (req, res) => {
+
+    const id = req.params.id
+    const data = req.body
+
+    console.log('1')
+
+    const update_query = 'UPDATE `users` SET `first_name` = ?, `last_name` = ?, `login` = ?, `password` = ?, photo = ? WHERE `id` = ?'
+
+    db.query(update_query,
+        [data.first_name, data.last_name, data.login, data.password, data.photo, id],
+        (err, result) => {
+            if (err) {
+                console.log('sql update err: ' + err)
+                res.status(500).json({ msg: err })
+            }
+            else res.status(200)
+        })
+
 })
 
 module.exports = router
