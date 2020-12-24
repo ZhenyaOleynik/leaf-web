@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from "react"
 import {
     Upload,
@@ -15,35 +16,36 @@ import Dropzone from 'react-dropzone'
 import Axios from "axios"
 import { serverURL } from "../../../config"
 
+import '../../css/antd-form.css'
+
 const { Title } = Typography
 
-// edit-form container style
-const container = {
-    width: '500px',
-    height: '560px',
-    box_sizing: 'border-box',
-    padding: '20px',
-    justify: 'center',
-    justify_content: 'center',
-    marginTop: '5rem'
-
-}
-
-const EditForm = ({ oldData }) => {
+const EditForm = ({ oldData, returnTo }) => {
 
     const [image, setImage] = useState('')
 
+    const ref = useRef(null)
+
+    useEffect(() => ref.current.setFieldsValue({
+        login: oldData.login,
+        first_name: oldData.first_name,
+        last_name: oldData.last_name,
+        password: oldData.password
+    }), [])
+
     const onFinish = values => {
-        Axios.put(serverURL + '/api/users/updateCurrent', {...values, photo: (image === '' ? oldData.image : image)})
-            .then(res => window.location.href = '/profile')
+        console.log(values)
+        const photo = image || oldData.photo
+        Axios.put(serverURL + `/api/users/update/${oldData.id}`, { ...values, photo })
+        window.location.href = returnTo
     }
 
     const onSubmitImg = acceptedFiles => {
         let formData = new FormData()
 
         const config = {
-            headers: { 
-                'content-type': 'multipart/form/data' 
+            headers: {
+                'content-type': 'multipart/form/data'
             }
         }
 
@@ -61,43 +63,39 @@ const EditForm = ({ oldData }) => {
 
 
     return (
-        <div style={container}>
-            <Title level={2}>Edit your data</Title>
-            <Title level={4}>Fill only fields you want to change</Title>
+        <div className={'antd-container'}>
+            <Title level={2}>Edit user data</Title>
+            <Title level={4}>Affect only fields you want to change</Title>
             <Form
                 name='Edit'
-                initialValues = {{
-                    login: oldData.login,
-                    first_name: oldData.first_name,
-                    last_name: oldData.last_name,
-                    password: oldData.password
-                }}
+                ref={ref}
                 onFinish={onFinish}
                 onFinishFailed={err => console.log('Failed: ' + err)}
             >
                 <Form.Item
-                    label='login'
+                    label='Login'
                     name='login'
                     rules={[]}
+
                 >
-                    <Input placeholder={oldData.login} />
+                    <Input />
                 </Form.Item>
                 <Form.Item
-                    label='first_name'
+                    label='First name'
                     name='first_name'
                     rules={[]}
                 >
-                    <Input placeholder={oldData.first_name} />
+                    <Input />
                 </Form.Item>
                 <Form.Item
-                    label='last_name'
+                    label='Last name'
                     name='last_name'
                     rules={[]}
                 >
-                    <Input placeholder={oldData.last_name} />
+                    <Input />
                 </Form.Item>
                 <Form.Item
-                    label='password'
+                    label='Password'
                     name='password'
                     rules={[]}
                 >
